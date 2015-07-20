@@ -1,5 +1,6 @@
-import pygame, sys
+import pygame, sys, random
 from pygame.locals import *
+
 from mapDraw import drawMap
 from assets import map
 
@@ -11,7 +12,7 @@ pygame.display.set_caption("Iso")
 clock = pygame.time.Clock()
 pygame.mixer.init()
 mapmusic = pygame.mixer.music.load('audio/music/BoxCat_Games_-_12_-_Passing_Time.mp3')
-walk = pygame.mixer.Sound('audio/sfx/footstep01.ogg')
+walk = [pygame.mixer.Sound('audio/sfx/footstep01.ogg'),pygame.mixer.Sound('audio/sfx/footstep01.ogg')]
 
 
 # Load all frames of animation for the player
@@ -37,7 +38,7 @@ for i in player:
 ani = 0
 
 # Event loop
-pygame.mixer.music.play(0)
+# pygame.mixer.music.play(0)
 while True:
   for event in pygame.event.get():
     if event.type == QUIT:
@@ -55,19 +56,19 @@ while True:
       if event.key == K_LEFT or event.key == K_a:
         xoffset += 64 
         xpos -= 1
-        walk.play()
+        walk[random.randrange(2)].play()
       if event.key == K_RIGHT or event.key == K_d:
         xoffset -= 64
         xpos += 1
-        walk.play()
+        walk[random.randrange(2)].play()
       if event.key == K_UP or event.key == K_w:
         yoffset += 32
         ypos -= 1
-        walk.play()
+        walk[random.randrange(2)].play()
       if event.key == K_DOWN or event.key == K_s:
         yoffset -= 32
         ypos += 1
-        walk.play()
+        walk[random.randrange(2)].play()
       if event.key == K_ESCAPE:
         pygame.quit()
         sys.exit()
