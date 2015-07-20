@@ -11,6 +11,7 @@ pygame.display.set_caption("Iso")
 clock = pygame.time.Clock()
 pygame.mixer.init()
 mapmusic = pygame.mixer.music.load('audio/music/BoxCat_Games_-_12_-_Passing_Time.mp3')
+walk = pygame.mixer.Sound('audio/sfx/footstep01.ogg')
 
 
 # Load all frames of animation for the player
@@ -54,15 +55,19 @@ while True:
       if event.key == K_LEFT or event.key == K_a:
         xoffset += 64 
         xpos -= 1
+        walk.play()
       if event.key == K_RIGHT or event.key == K_d:
         xoffset -= 64
         xpos += 1
+        walk.play()
       if event.key == K_UP or event.key == K_w:
         yoffset += 32
         ypos -= 1
+        walk.play()
       if event.key == K_DOWN or event.key == K_s:
         yoffset -= 32
         ypos += 1
+        walk.play()
       if event.key == K_ESCAPE:
         pygame.quit()
         sys.exit()
