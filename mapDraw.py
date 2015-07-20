@@ -11,8 +11,7 @@ def drawMap(xoffset,yoffset,tiles,display):
   
       cartx = currentTile*64
       carty = currentRow*64
-      #x = xoffset + 320 + ((cartx - carty) / 2)
-      #y = yoffset + 0 + ((cartx+carty) / 4)
+
       x = xoffset + 0 + ((cartx - carty) / 2)
       y = yoffset + 0 + ((cartx+carty) / 4)
   
