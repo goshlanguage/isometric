@@ -3,33 +3,54 @@ from pygame.locals import *
 from mapDraw import drawMap
 from assets import map
 
+
+# Load Resources
 pygame.init()
 display = pygame.display.set_mode((800,600), DOUBLEBUF)
 pygame.display.set_caption("Iso")
 clock = pygame.time.Clock()
+pygame.mixer.init()
+mapmusic = pygame.mixer.music.load('audio/music/BoxCat_Games_-_12_-_Passing_Time.mp3')
 
 
-#wall = pygame.image.load('wall.png').convert()
-#grass = pygame.image.load('grass.png').convert()
-tiles = [pygame.image.load('grass.png').convert(), pygame.image.load('wall.png').convert(),
-         pygame.image.load('water.png').convert()]
+# Load all frames of animation for the player
+player = [pygame.image.load('images/obj/player_walk_0.png').convert(),pygame.image.load('images/obj/player_walk_1.png').convert()]
 
-tileWidth = 64
-tileHeight = 64
+tiles = [pygame.image.load('images/tiles/grass.png').convert(), pygame.image.load('images/tiles/wall.png').convert(),
+         pygame.image.load('images/tiles/water.png').convert()]
+clouds = pygame.image.load('images/bgs/clouds.jpg').convert()
 
+# Setup Variables
 xoffset = 0
 yoffset = 0
 
 xpos = 6
-ypos = 11
+ypos = 6
+
+# We want our character animation to be on the first frame
+ani = 0
+# set alpha for all character animations
+for i in player:
+  player[ani].set_colorkey((255,0,255))
+  ani += 1
+ani = 0
 
 # Event loop
+pygame.mixer.music.play(0)
 while True:
   for event in pygame.event.get():
     if event.type == QUIT:
       pygame.quit()
       sys.exit()
-    if event.type == KEYUP:
+
+    # Mouse Bindings
+    if event.type == MOUSEBUTTONDOWN:
+        #sound.play()
+        mx, my = pygame.mouse.get_pos()
+        print("%s,%s" % (mx, my))
+
+    # Key Bindings
+    if event.type == KEYDOWN:
       if event.key == K_LEFT or event.key == K_a:
         xoffset += 64 
         xpos -= 1
@@ -41,18 +62,24 @@ while True:
         ypos -= 1
       if event.key == K_DOWN or event.key == K_s:
         yoffset -= 32
-        ypos += 1 
-      elif event.key == K_ESCAPE:
+        ypos += 1
+      if event.key == K_ESCAPE:
         pygame.quit()
         sys.exit()
+      # animate the character
+      if ani == 1:
+        ani = 0
+      else:
+        ani += 1
 
     print("(%s,%s)" % (xpos, ypos))
     print(map[xpos][ypos])
 
-    drawMap(xoffset, yoffset, tiles, display)  
-    player = pygame.image.load('player.png').convert() 
-    player.set_colorkey((0,0,0))
-    display.blit(player, (384,320))
 
-    pygame.display.update()
-    clock.tick(30)
+  display.fill((0,0,0))
+  display.blit(clouds,(0,0))
+  drawMap(xoffset, yoffset, tiles, display)
+  display.blit(player[ani], (384,320))
+
+  clock.tick(30)
+  pygame.display.update()
