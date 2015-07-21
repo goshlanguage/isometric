@@ -1,8 +1,8 @@
 import pygame, sys, random
 from pygame.locals import *
 
-from mapDraw import drawMap
-from assets import map
+from mapDraw import drawMap, randomMap
+#from assets import map
 
 
 # Load Resources
@@ -21,7 +21,8 @@ player = [pygame.image.load('images/obj/player/character_stand_l.png').convert()
 tiles = [pygame.image.load('images/tiles/grass.png').convert(), pygame.image.load('images/tiles/wall.png').convert(),
          pygame.image.load('images/tiles/water.png').convert()]
 blocking_tiles = [1,2]
-clouds = pygame.image.load('images/bgs/clouds.jpg').convert()
+clouds = pygame.image.load('images/bgs/stardust.png').convert()
+map = randomMap(tiles)
 
 # Setup Variables
 xoffset = 0
@@ -63,14 +64,14 @@ while True:
           xoffset += 32
           yoffset -= 16
           ypos += 1
-          walk[random.randrange(2)].play()
+          #walk[random.randrange(2)].play()
           ani = 0
       if event.key == K_RIGHT or event.key == K_d and ypos>0:
         if map[ypos-1][xpos] not in blocking_tiles:
           yoffset += 16
           xoffset -= 32
           ypos -= 1
-          walk[random.randrange(2)].play()
+          #walk[random.randrange(2)].play()
           ani = 1
       if event.key == K_UP or event.key == K_w and xpos>0:
         print(map[ypos][xpos-1])
@@ -79,14 +80,14 @@ while True:
           xoffset += 32
           xpos -= 1
           ani = 0
-          walk[random.randrange(2)].play()
+          #walk[random.randrange(2)].play()
       if event.key == K_DOWN or event.key == K_s and xpos<len(map[0]):
         if map[ypos][xpos+1] not in blocking_tiles:
           yoffset -= 16
           xoffset -= 32
           xpos += 1
           ani = 1
-          walk[random.randrange(2)].play()
+          #walk[random.randrange(2)].play()
       if event.key == K_i:
         if info_toggle:
           info_toggle = False
@@ -103,7 +104,7 @@ while True:
   # Setup frame
   display.fill((0,0,0)) # fill to clear frame
   display.blit(clouds,(0,0)) # background
-  drawMap(xoffset, yoffset, tiles, display) # render the map
+  drawMap(xoffset, yoffset, tiles, display, map) # render the map
   display.blit(player[ani], (385,336)) # draw our character
 
   # health bar
