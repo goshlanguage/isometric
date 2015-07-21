@@ -1,7 +1,13 @@
+Summary
+----------------
 Welcome to isometric. To install this python isometric 2d engine, you will need python, and pygame installed. This project is cross platform compatible, for Windows 7 (tested), Linux, and Mac OS X (Yosemite tested).
 
 For reading about good programming guidelines, see:
 https://www.pygame.org/docs/tut/tom/MakeGames.html
+http://pythonprogramming.net/pygame-start-menu-tutorial/
+
+Installation
+-----------------
 
 Windows:
 ---------
@@ -93,3 +99,15 @@ python app.py
 ```
 
 
+RoadMap
+---------
+
+~~Random Map~~
+~~Health Bar~~
+Load/Save Game
+Inventory Menu
+Inventory
+Animated Character Sprite (walking, standing, attack)
+Animated Enemy Sprite
+Inventory Hot Bar
+Tile placement function
