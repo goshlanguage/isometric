@@ -3,7 +3,44 @@ from pygame.locals import *
 
 from mapDraw import drawMap, randomMap
 from menus import mainmenu
-from config import display_height, display_width, save
+from config import display_height, display_width, version, save
+
+class playerSprite(pygame.sprite.Sprite):
+  frames = [ pygame.image.load('images/obj/player/character_stand_l.png'),
+          pygame.image.load('images/obj/player/character_stand_r.png') ]
+
+  def __init__(self):
+    pygame.sprite.Sprite.__init__(self)
+    self.rect = pygame.Rect(self.frames[0].get_rect())
+    self.rect.center = (385,336)
+    self.anim = 0
+
+  def update(self, direction):
+    if direction == 'u' or direction == 'l':
+      self.anim = 0
+    else:
+      self.anim = 1
+    self.image = self.frames[self.anim]
+
+
+class itemSprite(pygame.sprite.Sprite):
+  norm = [ pygame.image.load('images/obj/coin/coin_1.png'),
+    pygame.image.load('images/obj/coin/coin_2.png'),
+    pygame.image.load('images/obj/coin/coin_3.png'),
+    pygame.image.load('images/obj/coin/coin_4.png') ]
+  
+  def __init__(self, position):
+    pygame.sprite.Sprite.__init__(self) 
+    self.rect = pygame.Rect(self.norm[0].get_rect())
+    self.rect.center = position
+    self.anim = 0
+
+  def update(self, hitlist):
+    if self in hitlist: self.image = None
+    else: 
+      self.anim += 1
+      if self.anim >= len(self.norm): self.anim = 0
+      self.image = self.norm[self.anim]
 
 
 def gameloop():
@@ -19,7 +56,8 @@ def gameloop():
   font = pygame.font.Font('fonts/minecraft.ttf', 16)
   
   # Load all frames of animation for the player
-  player = [pygame.image.load('images/obj/player/character_stand_l.png').convert(),pygame.image.load('images/obj/player/character_stand_r.png').convert()]
+  #player = [pygame.image.load('images/obj/player/character_stand_l.png').convert(),pygame.image.load('images/obj/player/character_stand_r.png').convert()]
+  player = playerSprite()
   
   tiles = [pygame.image.load('images/tiles/grass.png').convert(), pygame.image.load('images/tiles/wall.png').convert(),
            pygame.image.load('images/tiles/water.png').convert(), pygame.image.load('images/tiles/wood.png').convert()]
@@ -30,16 +68,20 @@ def gameloop():
              'value': 1,
              'weight': 0.01,
              'meta' : { 'max_quantity': 100000000000 },
-             'blit' : [ pygame.image.load('images/obj/coin/coin_1.png'), 
-                        pygame.image.load('images/obj/coin/coin_2.png'), 
-                        pygame.image.load('images/obj/coin/coin_3.png'), 
-                        pygame.image.load('images/obj/coin/coin_4.png') ]
            } ]
                         
   
   
   # Generate our map
   map = randomMap(tiles)
+
+  coins = [  
+    itemSprite((32,32)),
+    itemSprite((720,480)),
+    itemSprite((500,300)),
+  ]
+  coin_group = pygame.sprite.RenderPlain(*coins)
+  player_group = pygame.sprite.RenderPlain(*[player])
   
   if not save:
     # Setup Variables
@@ -55,68 +97,65 @@ def gameloop():
 
     info_toggle = False
   
-  # We want our character animation to be on the first frame
-  ani = 0
-  # set alpha for all character animations
-  for i in player:
-    player[ani].set_colorkey((255,0,255))
-    ani += 1
-  ani = 0
-
-
   # Event loop
   # pygame.mixer.music.play(0)
   while True:
+
+    # Key Bindings
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_UP] and ypos>0:
+      if map[ypos][xpos-1] not in blocking_tiles:
+        yoffset += 16
+        xoffset += 32
+        xpos -= 1
+        #walk[random.randrange(2)].play()
+        player.update('u')
+
     for event in pygame.event.get():
-      if event.type == QUIT:
-        pygame.quit()
-        sys.exit()
-  
       # Mouse Bindings
       if event.type == MOUSEBUTTONDOWN:
-          #sound.play()
-          mx, my = pygame.mouse.get_pos()
-          print("%s,%s" % (mx, my))
-  
-      # Key Bindings
-      if event.type == KEYDOWN:
-        if event.key == K_LEFT or event.key == K_a and ypos<len(map):
-          # BUGGY if you walk off of the map
-          if map[ypos+1][xpos] not in blocking_tiles:
-            xoffset += 32
-            yoffset -= 16
-            ypos += 1
-            #walk[random.randrange(2)].play()
-            ani = 0
-        if event.key == K_RIGHT or event.key == K_d and ypos>0:
-          if map[ypos-1][xpos] not in blocking_tiles:
-            yoffset += 16
-            xoffset -= 32
-            ypos -= 1
-            #walk[random.randrange(2)].play()
-            ani = 1
-        if event.key == K_UP or event.key == K_w and xpos>0:
-          if map[ypos][xpos-1] not in blocking_tiles:
-            yoffset += 16
-            xoffset += 32
-            xpos -= 1
-            ani = 0
-            #walk[random.randrange(2)].play()
-        if event.key == K_DOWN or event.key == K_s and xpos<len(map[0]):
-          if map[ypos][xpos+1] not in blocking_tiles:
-            yoffset -= 16
-            xoffset -= 32
-            xpos += 1
-            ani = 1
-            #walk[random.randrange(2)].play()
-        if event.key == K_i:
-          if info_toggle:
-            info_toggle = False
-          else:
-            info_toggle = True
-        if event.key == K_ESCAPE:
-          pygame.quit()
-          sys.exit()
+        #sound.play()
+        mx, my = pygame.mouse.get_pos()
+        print("%s,%s" % (mx, my))
+
+    if keys[K_LEFT] or keys[K_a] and ypos<len(map):
+      # BUGGY if you walk off of the map
+      if map[ypos+1][xpos] not in blocking_tiles:
+        xoffset += 32
+        yoffset -= 16
+        ypos += 1
+        #walk[random.randrange(2)].play()
+        player.update('l')
+    if keys[K_RIGHT] or keys[K_d] and ypos>0:
+      if map[ypos-1][xpos] not in blocking_tiles:
+        yoffset += 16
+        xoffset -= 32
+        ypos -= 1
+        #walk[random.randrange(2)].play()
+        player.update('r')
+    if keys[K_UP] or keys[K_w] and xpos>0:
+      if map[ypos][xpos-1] not in blocking_tiles:
+        yoffset += 16
+        xoffset += 32
+        xpos -= 1
+        #walk[random.randrange(2)].play()
+        player.update('u')
+    if keys[K_DOWN] or keys[K_s] and xpos<len(map[0]):
+      if map[ypos][xpos+1] not in blocking_tiles:
+        yoffset -= 16
+        xoffset -= 32
+        xpos += 1
+        #walk[random.randrange(2)].play()
+        player.update('d')
+    # This info screen toggle will soon become inventory
+    if keys[K_i]:
+      if info_toggle:
+        info_toggle = False
+      else:
+        info_toggle = True
+    if keys[K_ESCAPE]:
+      pygame.quit()
+      sys.exit()
   
   
     if health<100:
@@ -126,18 +165,25 @@ def gameloop():
     display.fill((0,0,0)) # fill to clear frame
     display.blit(bg,(0,0)) # background
     drawMap(xoffset, yoffset, tiles, display, map) # render the map
-    display.blit(player[ani], (385,336)) # draw our character
+    #display.blit(player, (385,336)) # draw our character change to sprite later
+    #[player].draw(display)
   
-    # health bar
+    # health bar horizontal
     pygame.draw.rect(display, (0,0,0), pygame.Rect(22,22,106,26))
     pygame.draw.rect(display, (200,0,0), pygame.Rect(25,25,health,20))
   
     # label and version
-    label = font.render('isometric v0.1', True, (250,250,250))
+    label = font.render('isometric v%s' % version, True, (250,250,250))
     label_obj = label.get_rect()
     label_box = label_obj.center = (680,580)
     display.blit(label, label_box)
   
+    # Draw sprites to screen
+    pygame.sprite.RenderPlain(player)
+    collisions = pygame.sprite.spritecollide(player, coin_group, True)
+    coin_group.update(collisions)
+    coin_group.draw(display)
+
     # Info
     if info_toggle:
       info = font.render("(%s,%s): Tile %s" % (xpos,ypos,map[ypos][xpos]), True, (250,250,250))
@@ -149,26 +195,6 @@ def gameloop():
       fps_obj = fps.get_rect()
       fps_box = label_obj.center = (725,25)
       display.blit(fps,fps_box)
-  
-      debug = font.render("xpos: %s" % (xpos),True, (250,250,250))
-      debug_obj = debug.get_rect()
-      debug_box = debug_obj.center = (725,50)
-      display.blit(debug,debug_box)
-  
-      debug1 = font.render("ypos: %s" % (ypos),True, (250,250,250))
-      debug1_obj = debug1.get_rect()
-      debug1_box = debug1_obj.center = (725,75)
-      display.blit(debug1,debug1_box)
-  
-      debug2 = font.render("nextu:%s" % (map[ypos][xpos-1]),True, (250,250,250))
-      debug2_obj = debug2.get_rect()
-      debug2_box = debug2_obj.center = (725,100)
-      display.blit(debug2,debug2_box)
-  
-      debug3 = font.render("nextd:%s" % (map[ypos][xpos+1]),True, (250,250,250))
-      debug3_obj = debug3.get_rect()
-      debug3_box = debug3_obj.center = (725,125)
-      display.blit(debug3,debug3_box)
   
     clock.tick(30)
     pygame.display.update()
