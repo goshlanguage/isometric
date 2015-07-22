@@ -104,11 +104,27 @@ RoadMap
 ---------
 
 ~~Random Map~~
+
 ~~Health Bar~~
+
 Load/Save Game
+
 Inventory Menu
+
 Inventory
+
 Animated Character Sprite (walking, standing, attack)
+
 Animated Enemy Sprite
+
 Inventory Hot Bar
+
 Tile placement function
+
+Light Shadows
+
+Decent BG Music
+
+SFX Package
+
+Draw Distance Detection and Rendering
