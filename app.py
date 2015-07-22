@@ -53,7 +53,7 @@ def gameloop():
   #mapmusic = pygame.mixer.music.load('audio/music/.mp3')
   mapmusic = pygame.mixer.music.load('audio/music/BoxCat_Games_-_12_-_Passing_Time.mp3')
   walk = [pygame.mixer.Sound('audio/sfx/footstep01.ogg'),pygame.mixer.Sound('audio/sfx/footstep01.ogg')]
-  font = pygame.font.Font('fonts/minecraft.ttf', 16)
+  font = pygame.font.Font('fonts/Minecraft.ttf', 16)
   
   # Load all frames of animation for the player
   #player = [pygame.image.load('images/obj/player/character_stand_l.png').convert(),pygame.image.load('images/obj/player/character_stand_r.png').convert()]

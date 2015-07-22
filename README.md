@@ -65,19 +65,20 @@ python app.py
 ```
 
 
-Linux:
+Ubuntu (14):
 ----------
 Step 1:
 Install all Pygame deps for Linux with yum / apt-get
 
 ```ssh
-    yum install python3 hg sdl sdl_image sdl_ttf portmidi smpeg
+    sudo apt-get install python3 mercurial python3-pip libfreetype6-dev 
+    sudo apt-get build-dep ptyhon-pygame
 ```
 
 Step 2:
 Install PyGame
 ```ssh
-    pip3 install hg+http://bitbucket.org/pygame/pygame
+    sudo pip3 install hg+http://bitbucket.org/pygame/pygame
 ```
 
 Step 3:
