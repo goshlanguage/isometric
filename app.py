@@ -51,7 +51,7 @@ def gameloop():
   clock = pygame.time.Clock()
   pygame.mixer.init()
   #mapmusic = pygame.mixer.music.load('audio/music/.mp3')
-  mapmusic = pygame.mixer.music.load('audio/music/BoxCat_Games_-_12_-_Passing_Time.mp3')
+  #mapmusic = pygame.mixer.music.load('audio/sfx/menu_screen.mp3')
   walk = [pygame.mixer.Sound('audio/sfx/footstep01.ogg'),pygame.mixer.Sound('audio/sfx/footstep01.ogg')]
   font = pygame.font.Font('fonts/minecraft.ttf', 16)
   
