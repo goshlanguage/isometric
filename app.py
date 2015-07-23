@@ -14,6 +14,7 @@ class playerSprite(pygame.sprite.Sprite):
     self.rect = pygame.Rect(self.frames[0].get_rect())
     self.rect.center = (385,336)
     self.anim = 0
+    self.image = self.frames[0]
 
   def update(self, direction):
     if direction == 'u' or direction == 'l':
@@ -56,7 +57,7 @@ def gameloop():
   font = pygame.font.Font('fonts/Minecraft.ttf', 16)
   
   # Load all frames of animation for the player
-  #player = [pygame.image.load('images/obj/player/character_stand_l.png').convert(),pygame.image.load('images/obj/player/character_stand_r.png').convert()]
+  player = [pygame.image.load('images/obj/player/character_stand_l.png').convert(),pygame.image.load('images/obj/player/character_stand_r.png').convert()]
 
   tiles = [pygame.image.load('images/tiles/grass.png').convert(), pygame.image.load('images/tiles/wall.png').convert(),
            pygame.image.load('images/tiles/water.png').convert(), pygame.image.load('images/tiles/wood.png').convert()]
@@ -74,13 +75,14 @@ def gameloop():
   # Generate our map
   map = randomMap(85,tiles)
 
-  player = playerSprite()
+  players = [ playerSprite(), ]
 
   coins = [  
     itemSprite((500,300)),
   ]
+
+  player_group = pygame.sprite.RenderPlain(*players)
   coin_group = pygame.sprite.RenderPlain(*coins)
-  player_group = pygame.sprite.RenderPlain(*[player])
   
   if not save:
     # Setup Variables
@@ -134,6 +136,7 @@ def gameloop():
         yoffset -= 16
         ypos += 1
         walk[random.randrange(2)].play()
+        player_group.update('l')
 
     if keys[K_RIGHT] or keys[K_d] and keys[K_LSHIFT] and ypos>0:
       if map[ypos-1][xpos] not in blocking_tiles:
@@ -141,6 +144,7 @@ def gameloop():
         xoffset -= 32
         ypos -= 1
         walk[random.randrange(2)].play()
+        player_group.update('r')
 
     if keys[K_UP] or keys[K_w]and keys[K_LSHIFT] and xpos>0:
       if map[ypos][xpos-1] not in blocking_tiles:
@@ -148,6 +152,7 @@ def gameloop():
         xoffset += 32
         xpos -= 1
         walk[random.randrange(2)].play()
+        player_group.update('u')
 
     if keys[K_DOWN] or keys[K_s] and keys[K_LSHIFT] and xpos<len(map[0]):
       if map[ypos][xpos+1] not in blocking_tiles:
@@ -155,6 +160,7 @@ def gameloop():
         xoffset -= 32
         xpos += 1
         walk[random.randrange(2)].play()
+        player_group.update('d')
 
 
   
@@ -169,8 +175,7 @@ def gameloop():
     display.fill((0,0,0)) # fill to clear frame
     display.blit(bg,(0,0)) # background
     drawMap(xoffset, yoffset, tiles, display, map) # render the map
-    #display.blit(player, (385,336)) # draw our character change to sprite later
-    #[player].draw(display)
+    #display.blit(player[0], (385,336)) # draw our character change to sprite later
   
     # health bar horizontal
     pygame.draw.rect(display, (0,0,0), pygame.Rect(22,22,106,12))
@@ -182,9 +187,11 @@ def gameloop():
     pygame.draw.rect(display, (200,200,200), pygame.Rect(25,45,stamina,15))
   
     # Draw sprites to screen
-    collisions = pygame.sprite.spritecollide(player, coin_group, True)
+    collisions = pygame.sprite.spritecollide(players[0], coin_group, True)
     coin_group.update(collisions)
     coin_group.draw(display)
+
+    player_group.draw(display)
 
     # Info
     if info_toggle:
