@@ -2,29 +2,31 @@
 #
 import random
 
-def randomMap(tiles):
-  size = 64
+size = 64
+
+def randomMap(probability, list_obj):
+  # random map
   rmap = [[]]
   for x in range(0,size-1):
     rmap.append([])
     for y in range(0,size-1):
 
       # Let's make sure at least 85% of our tiles are walkable
-      dice = int(random.randrange(0,100))
-      if dice>85:
+      dice = random.randint(0,100)
+      if dice>probability:
         # in the 15% of the time we do gen a random tile,
         #  let's try to clump similar types together
         if not y > 0 or random.randint(1,10) < 5:
-          randomTile = int(random.randrange(0, len(tiles)))
+          random_item = int(random.randrange(0, len(list_obj)))
         else:
           if random.randint(0,1) == 0 or x == 0:
             if rmap[x][y-1] == 1 or rmap[x][y-1] == 2:
-              randomTile = rmap[x][y-1]
+              random_item = rmap[x][y-1]
             else:
-              randomTile = 2
+              random_item = 2
           else:
-            randomTile = rmap[x-1][y]
-        rmap[x].append(randomTile)
+            random_item = rmap[x-1][y]
+        rmap[x].append(random_item)
       else:
         rmap[x].append(0)
   return rmap

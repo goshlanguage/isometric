@@ -7,7 +7,7 @@ from config import display_height, display_width, version
 pygame.init()
 display = pygame.display.set_mode((display_height,display_width))
 pygame.display.set_caption('Isometric v%s' % version)
-start = pygame.image.load('images/obj/start.png').convert()
+start = pygame.image.load('images/obj/button.png').convert()
 menubg = pygame.image.load('images/obj/mainmenubg.png').convert()
 
 
@@ -28,7 +28,8 @@ def mainmenu(main):
   titleRect.center = ((400,100))
   subRect.center = ((400,200))
 
-  pygame.mixer.music.play(0)
+  # MUTED, save me
+  #pygame.mixer.music.play(0)
   while True:
     for event in pygame.event.get():
       # This is for when you click X on the game window
