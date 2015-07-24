@@ -15,7 +15,7 @@ class playerSprite(pygame.sprite.Sprite):
   def __init__(self):
     pygame.sprite.Sprite.__init__(self)
     self.rect = pygame.Rect(self.frames[0].get_rect())
-    self.rect.center = (385,320)
+    self.rect.center = (420,372)
     self.anim = 0
     self.image = self.frames[0]
 
@@ -70,23 +70,20 @@ def gameloop():
   blocking_tiles = [1,2]
   bg = pygame.image.load('images/bgs/stardust.png').convert()
 
-  objs = [ { 'name': 'Coin',
-             'value': 1,
-             'weight': 0.01,
-             'meta' : { 'max_quantity': 100000000000 },
-           } ]
-                        
   
   
   # Generate our map
   map = randomMap(85,tiles)
 
+  # Setup our sprites
   players = [ playerSprite(), ]
 
+  # This should be moved to the map drawing to handle coordinates for x,y and offset.
   coins = [  
     itemSprite((500,300)),
   ]
-
+ 
+  # Render our groups to the display
   player_group = pygame.sprite.RenderPlain(*players)
   coin_group = pygame.sprite.RenderPlain(*coins)
   
@@ -99,7 +96,7 @@ def gameloop():
     
     health=60
     stamina=40
-    regen=0.1
+    regen=1
     
     inventory = {}
 
@@ -135,7 +132,7 @@ def gameloop():
     keys = pygame.key.get_pressed()
 
 
-    if keys[K_LEFT] or keys[K_a] and keys[K_LSHIFT] and ypos<len(map):
+    if not ypos == len(map)-1 and keys[K_LEFT] or keys[K_a] and keys[K_LSHIFT]:
       # BUGGY if you walk off of the map
       if map[ypos+1][xpos] not in blocking_tiles:
         xoffset += 32
@@ -144,7 +141,7 @@ def gameloop():
         walk[random.randrange(2)].play()
         player_group.update('l')
 
-    if keys[K_RIGHT] or keys[K_d] and keys[K_LSHIFT] and ypos>0:
+    if ypos>0 and keys[K_RIGHT] or keys[K_d]:
       if map[ypos-1][xpos] not in blocking_tiles:
         yoffset += 16
         xoffset -= 32
@@ -152,7 +149,7 @@ def gameloop():
         walk[random.randrange(2)].play()
         player_group.update('r')
 
-    if keys[K_UP] or keys[K_w]and keys[K_LSHIFT] and xpos>0:
+    if xpos>0 and keys[K_UP] or keys[K_w]and keys[K_LSHIFT]:
       if map[ypos][xpos-1] not in blocking_tiles:
         yoffset += 16
         xoffset += 32
@@ -160,7 +157,7 @@ def gameloop():
         walk[random.randrange(2)].play()
         player_group.update('u')
 
-    if keys[K_DOWN] or keys[K_s] and keys[K_LSHIFT] and xpos<len(map[0]):
+    if not xpos == len(map[0])-1 and keys[K_DOWN] or keys[K_s] and keys[K_LSHIFT]:
       if map[ypos][xpos+1] not in blocking_tiles:
         yoffset -= 16
         xoffset -= 32

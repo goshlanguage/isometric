@@ -6,10 +6,10 @@ size = 64
 
 def randomMap(probability, list_obj):
   # random map
-  rmap = [[]]
-  for x in range(0,size-1):
+  rmap = []
+  for x in range(0,size):
     rmap.append([])
-    for y in range(0,size-1):
+    for y in range(0,size):
 
       # Let's make sure at least 85% of our tiles are walkable
       dice = random.randint(0,100)
