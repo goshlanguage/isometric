@@ -7,12 +7,13 @@ from config import display_height, display_width, version
 pygame.init()
 display = pygame.display.set_mode((display_height,display_width))
 pygame.display.set_caption('Isometric v%s' % version)
-start = pygame.image.load('images/obj/button.png').convert()
+start = [pygame.image.load('images/obj/button.png').convert(), pygame.image.load('images/obj/button_i.png').convert()]
 menubg = pygame.image.load('images/obj/mainmenubg.png').convert()
 
 
 
 menu_music = pygame.mixer.music.load('audio/sfx/menu_screen.mp3')
+menu_item = pygame.mixer.Sound('audio/sfx/menu_item.ogg')
 
 def quit():
   pygame.quit()
@@ -20,13 +21,13 @@ def quit():
 
 def mainmenu(main):
   titleFont = pygame.font.Font('fonts/04B_30.ttf',72)
-  subFont = pygame.font.Font('fonts/04B_30.ttf',32)
+  #subFont = pygame.font.Font('fonts/04B_30.ttf',32)
   titleSurf = titleFont.render('Isometric', True, (0,0,0))
-  subSurf = subFont.render('by Ryan Hartje', True, (0,0,0))
+  #subSurf = subFont.render('by Ryan Hartje', True, (0,0,0))
   titleRect = titleSurf.get_rect()
-  subRect = subSurf.get_rect()
+  #subRect = subSurf.get_rect()
   titleRect.center = ((400,100))
-  subRect.center = ((400,200))
+  #subRect.center = ((400,200))
 
   # MUTED, save me
   #pygame.mixer.music.play(0)
@@ -51,17 +52,22 @@ def mainmenu(main):
 
 
     display.blit(titleSurf, titleRect)
-    display.blit(subSurf, subRect)
+    #display.blit(subSurf, subRect)
 
 
-    button("Start",350,300,100,50,start,start,main)
+    button("Start",300,300,200,50,start[0],start[1],main)
     pygame.display.update()
 
 # label, x,y, width, height, inactive_color, active_color, action or subprogram
 def button(msg,x,y,w,h,inactive_image, active_image,action=None):
+    played=False
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
     if x+w > mouse[0] > x and y+h > mouse[1] > y:
+        if not played:
+          #buggy
+          #menu_item.play()
+          played=True
         #pygame.draw.rect(display, ac,(x,y,w,h))
         display.blit(active_image, (x,y))
 
@@ -70,9 +76,10 @@ def button(msg,x,y,w,h,inactive_image, active_image,action=None):
     else:
         #pygame.draw.rect(display, inactive_image,(x,y,w,h))
         display.blit(active_image, (x,y))
+        played=False
     smallText = pygame.font.Font("fonts/Minecraft.ttf",26)
 
-    textSurf = smallText.render(msg, True, (0,0,0))
+    textSurf = smallText.render(msg, True, (245,245,245))
     textRect = textSurf.get_rect()
     textRect.center = ( (x+(w/2)), (y+(h/2)) )
     display.blit(textSurf, textRect)

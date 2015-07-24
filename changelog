@@ -1,0 +1,15 @@
+0.1.1 - Added a Main menu
+      - Reenabled character walk sounds
+      - Setup info toggle (i for now, until inventory is implemented)
+      - Setup player sprite and itemSprite objects to manage the game's sprites.
+      - Setup probability for maps to be able to adjust difficulty in different areas
+
+0.1.0 - Added a player sprite with no animation, with a left and right orientation.
+      - Can move character
+      - Map will move when you use WASD or the arrow keys
+      - Added an animated sprite to the map
+      - Added 4 main tiles: grass, water, stone, and wood floor
+      - Setup configuration map sizes
+      - Created a random map function
+
+0.1 - Started the project. Start with tile layouts from a stackoverflow question

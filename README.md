@@ -99,7 +99,6 @@ Run app.py and see if everything works!
 python app.py
 ```
 
-
 RoadMap
 ---------
 
@@ -113,7 +112,7 @@ Inventory Menu
 
 Inventory
 
-Animated Character Sprite (walking, standing, attack)
+Animated Character Sprite (~~walking~~, standing, attack)
 
 Animated Enemy Sprite
 

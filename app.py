@@ -3,24 +3,27 @@ from pygame.locals import *
 
 from mapDraw import drawMap, randomMap
 from menus import mainmenu
-from config import display_height, display_width, version, save
+from config import display_height, display_width, version, save, fps_setting
+
 
 class playerSprite(pygame.sprite.Sprite):
   frames = [ pygame.image.load('images/obj/player/character_stand_l.png'),
-          pygame.image.load('images/obj/player/character_stand_r.png') ]
+             pygame.image.load('images/obj/player/character_stand_l2.png'),
+             pygame.image.load('images/obj/player/character_stand_r.png'),
+             pygame.image.load('images/obj/player/character_stand_r2.png')]
 
   def __init__(self):
     pygame.sprite.Sprite.__init__(self)
     self.rect = pygame.Rect(self.frames[0].get_rect())
-    self.rect.center = (385,336)
+    self.rect.center = (385,320)
     self.anim = 0
     self.image = self.frames[0]
 
   def update(self, direction):
     if direction == 'u' or direction == 'l':
-      self.anim = 0
+      self.anim = random.randrange(0,2)
     else:
-      self.anim = 1
+      self.anim = random.randrange(2,4)
     self.image = self.frames[self.anim]
 
 
@@ -57,7 +60,10 @@ def gameloop():
   font = pygame.font.Font('fonts/Minecraft.ttf', 16)
   
   # Load all frames of animation for the player
-  player = [pygame.image.load('images/obj/player/character_stand_l.png').convert(),pygame.image.load('images/obj/player/character_stand_r.png').convert()]
+  player = [ pygame.image.load('images/obj/player/character_stand_l.png').convert(),
+             pygame.image.load('images/obj/player/character_stand_l2.png').convert(),
+             pygame.image.load('images/obj/player/character_stand_r.png').convert(),
+             pygame.image.load('images/obj/player/character_stand_r2.png').convert()]
 
   tiles = [pygame.image.load('images/tiles/grass.png').convert(), pygame.image.load('images/tiles/wall.png').convert(),
            pygame.image.load('images/tiles/water.png').convert(), pygame.image.load('images/tiles/wood.png').convert()]
@@ -178,13 +184,12 @@ def gameloop():
     #display.blit(player[0], (385,336)) # draw our character change to sprite later
   
     # health bar horizontal
-    pygame.draw.rect(display, (0,0,0), pygame.Rect(22,22,106,12))
-    pygame.draw.rect(display, (200,0,0), pygame.Rect(25,25,health,15))
+    pygame.draw.rect(display, (0,0,0), pygame.Rect(22,20,106,12))
+    pygame.draw.rect(display, (200,0,0), pygame.Rect(25,22,health,8))
 
     # Stamina
-    stamina = 50
-    pygame.draw.rect(display, (0,0,0), pygame.Rect(22,42,106,12))
-    pygame.draw.rect(display, (200,200,200), pygame.Rect(25,45,stamina,15))
+    pygame.draw.rect(display, (0,0,0), pygame.Rect(22,36,106,12))
+    pygame.draw.rect(display, (200,200,200), pygame.Rect(25,38,stamina,8))
   
     # Draw sprites to screen
     collisions = pygame.sprite.spritecollide(players[0], coin_group, True)
@@ -214,7 +219,7 @@ def gameloop():
 
 
   
-    clock.tick(30)
+    clock.tick(fps_setting)
     pygame.display.update()
 
 
