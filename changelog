@@ -1,3 +1,9 @@
+0.1.2 - Fixed bugs with walking off of the edge of the map
+      - Fixed positioning so that collisions make sense
+      - Fixed regen to work better on 8 bit/fps
+      - Updated to 16 bit, as it looks better
+
+
 0.1.1 - Added a Main menu
       - Reenabled character walk sounds
       - Setup info toggle (i for now, until inventory is implemented)
