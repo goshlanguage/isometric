@@ -1,6 +1,6 @@
 import pygame, sys
 from pygame.locals import *
-from config import display_height, display_width, version
+from config import display_height, display_width, version, game_font
 
 #from ui import button
 
@@ -11,17 +11,32 @@ start = [pygame.image.load('images/obj/button.png').convert(), pygame.image.load
 menubg = pygame.image.load('images/obj/mainmenubg.png').convert()
 
 
-
+# Assets
 menu_music = pygame.mixer.music.load('audio/sfx/menu_screen.mp3')
 menu_item = pygame.mixer.Sound('audio/sfx/menu_item.ogg')
+
+
 
 def quit():
   pygame.quit()
   sys.exit()
 
+def esc_menu(display):
+  #escSurf = game_font.rander('')
+  menu_bg = pygame.Rect(300,200,200,200)
+  pygram.draw.rect(display, (0,0,0), menu_bg)
+  button("Back",300,300,200,50,start[0],start[1],self.close_menu()),
+
+
+  def close_menu():
+      # Clean up?? we dont really need to do anything unless it frees ram
+      b=22
+
+
+
 def mainmenu(main):
   titleFont = pygame.font.Font('fonts/04B_30.ttf',72)
-  #subFont = pygame.font.Font('fonts/04B_30.ttf',32)
+  #subFont =
   titleSurf = titleFont.render('Isometric', True, (0,0,0))
   #subSurf = subFont.render('by Ryan Hartje', True, (0,0,0))
   titleRect = titleSurf.get_rect()
@@ -40,7 +55,7 @@ def mainmenu(main):
       # And this is for when you hit Escape in the Menu screen.
       keys = pygame.key.get_pressed()
       if keys[K_ESCAPE]:
-        quit()
+        esc_menu()
 
     # menu
     display.fill((225,225,225))

@@ -1,9 +1,11 @@
 import pygame, sys, random
 from pygame.locals import *
 
-from mapDraw import drawMap, randomMap
-from menus import mainmenu
 from config import display_height, display_width, version, save, fps_setting
+from menus import mainmenu, esc_menu
+from mapDraw import drawMap, randomMap
+
+
 
 
 class playerSprite(pygame.sprite.Sprite):
@@ -28,14 +30,11 @@ class playerSprite(pygame.sprite.Sprite):
 
 
 class itemSprite(pygame.sprite.Sprite):
-  norm = [ pygame.image.load('images/obj/coin/coin_1.png'),
-    pygame.image.load('images/obj/coin/coin_2.png'),
-    pygame.image.load('images/obj/coin/coin_3.png'),
-    pygame.image.load('images/obj/coin/coin_4.png') ]
-  
-  def __init__(self, position):
-    pygame.sprite.Sprite.__init__(self) 
-    self.rect = pygame.Rect(self.norm[0].get_rect())
+
+  def __init__(self, position,frames):
+    pygame.sprite.Sprite.__init__(self)
+    self.frames = frames
+    self.rect = pygame.Rect(self.frames[0].get_rect())
     self.rect.center = position
     self.anim = 0
 
@@ -43,8 +42,8 @@ class itemSprite(pygame.sprite.Sprite):
     if self in hitlist: self.image = None
     else: 
       self.anim += 1
-      if self.anim >= len(self.norm): self.anim = 0
-      self.image = self.norm[self.anim]
+      if self.anim >= len(self.frames): self.anim = 0
+      self.image = self.frames[self.anim]
 
 
 def gameloop():
@@ -67,6 +66,12 @@ def gameloop():
 
   tiles = [pygame.image.load('images/tiles/grass.png').convert(), pygame.image.load('images/tiles/wall.png').convert(),
            pygame.image.load('images/tiles/water.png').convert(), pygame.image.load('images/tiles/wood.png').convert()]
+
+  coin_imgs =  [ pygame.image.load('images/obj/coin/coin_1.png'),
+    pygame.image.load('images/obj/coin/coin_2.png'),
+    pygame.image.load('images/obj/coin/coin_3.png'),
+    pygame.image.load('images/obj/coin/coin_4.png') ]
+
   blocking_tiles = [1,2]
   bg = pygame.image.load('images/bgs/stardust.png').convert()
 
@@ -77,15 +82,17 @@ def gameloop():
 
   # Setup our sprites
   players = [ playerSprite(), ]
+  sprites = [ itemSprite((0,0),coin_imgs)]
 
   # This should be moved to the map drawing to handle coordinates for x,y and offset.
-  coins = [  
-    itemSprite((500,300)),
-  ]
+  #coins = [
+  #  itemSprite((500,300)),
+  #]
+
  
   # Render our groups to the display
   player_group = pygame.sprite.RenderPlain(*players)
-  coin_group = pygame.sprite.RenderPlain(*coins)
+  coin_group = pygame.sprite.RenderPlain(*sprites)
   
   if not save:
     # Setup Variables
@@ -101,6 +108,7 @@ def gameloop():
     inventory = {}
 
     info_toggle = False
+    esc_toggle  = False
   
   # Event loop
   # pygame.mixer.music.play(0)
@@ -177,7 +185,7 @@ def gameloop():
     # Setup frame
     display.fill((0,0,0)) # fill to clear frame
     display.blit(bg,(0,0)) # background
-    drawMap(xoffset, yoffset, tiles, display, map) # render the map
+    drawMap(xoffset, yoffset, tiles, display, map,sprites) # render the map
     #display.blit(player[0], (385,336)) # draw our character change to sprite later
   
     # health bar horizontal
@@ -191,9 +199,14 @@ def gameloop():
     # Draw sprites to screen
     collisions = pygame.sprite.spritecollide(players[0], coin_group, True)
     coin_group.update(collisions)
-    coin_group.draw(display)
+    #coin_group.draw(display)
 
     player_group.draw(display)
+
+    # Escape menu
+    if esc_toggle:
+      esc_menu(display)
+
 
     # Info
     if info_toggle:

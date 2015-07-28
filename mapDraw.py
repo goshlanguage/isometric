@@ -31,9 +31,12 @@ def randomMap(probability, list_obj):
         rmap[x].append(0)
   return rmap
 
-def drawMap(xoffset,yoffset,tiles,display,map):
+def drawMap(xoffset,yoffset,tiles,display,map,items):
+
   currentRow = 0 # y
   currentTile = 0 # x
+
+  # Begin drawing the map, starting at [0,0] in the map data set
   for row in map:
     for tile in row:
       tileImage = tiles[map[currentRow][currentTile]]
@@ -46,7 +49,14 @@ def drawMap(xoffset,yoffset,tiles,display,map):
       y = yoffset + 0 + ((cartx+carty) / 4)
   
       currentTile+=1
+
+      # draw to display
       display.blit(tileImage, (x,y))
+      #coins = [
+      #  itemSprite((500,300)),
+      #]
+
+
     
     currentTile = 0 # Reset for new row
     currentRow += 1
