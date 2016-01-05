@@ -12,8 +12,8 @@ menubg = pygame.image.load('images/obj/mainmenubg.png').convert()
 
 
 
-menu_music = pygame.mixer.music.load('audio/sfx/menu_screen.mp3')
-menu_item = pygame.mixer.Sound('audio/sfx/menu_item.ogg')
+#menu_music = pygame.mixer.music.load('audio/sfx/menu_screen.mp3')
+#menu_item = pygame.mixer.Sound('audio/sfx/menu_item.ogg')
 
 def quit():
   pygame.quit()

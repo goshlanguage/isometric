@@ -37,7 +37,7 @@ Step 1:
 Install all Pygame deps for Mac with Brew (if you don't have brew, look up how to install first)
 
 ```ssh
-    brew install python3 hg sdl sdl_image sdl_ttf portmidi smpeg 
+    brew install python3 hg sdl sdl_image sdl_ttf portmidi smpeg libogg 
 ```
 
 Step 2:
@@ -64,6 +64,14 @@ Run app.py and see if everything works!
 python app.py
 ```
 
+If you receive an error stating: "(ImportError: No module named 'pygame.mixer')"
+you can download the SDL Development Library for Mac and copy it to your /Library/Frameworks/ folder.
+Ex:
+
+Download:
+https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-2.0.0.dmg
+
+Then copy the contents to /Library/Frameworks
 
 Ubuntu (14):
 ----------

@@ -15,18 +15,23 @@ class playerSprite(pygame.sprite.Sprite):
   def __init__(self):
     pygame.sprite.Sprite.__init__(self)
     self.rect = pygame.Rect(self.frames[0].get_rect())
-    self.rect.center = (420,372)
+    self.rect.center = (420,320) 
+    #372)
     self.anim = 0
     self.image = self.frames[0]
 
   def update(self, direction):
     if direction == 'u' or direction == 'l':
-      self.anim = random.randrange(0,2)
+      if self.anim >= int(len(self.frames)/2):
+        self.anim = 0
     else:
-      self.anim = random.randrange(2,4)
+      if self.anim >= len(self.frames)-1:
+        self.anim = int(len(self.frames)/2)
+      
+    self.anim += 1
     self.image = self.frames[self.anim]
 
-
+# Refactor so any sprite/item can be created by passing an array (sprite)
 class itemSprite(pygame.sprite.Sprite):
   norm = [ pygame.image.load('images/obj/coin/coin_1.png'),
     pygame.image.load('images/obj/coin/coin_2.png'),
@@ -54,9 +59,9 @@ def gameloop():
   pygame.display.set_caption("Isometric")
   clock = pygame.time.Clock()
   pygame.mixer.init()
-  #mapmusic = pygame.mixer.music.load('audio/music/.mp3')
+  mapmusic = pygame.mixer.music.load('audio/bg.mp3')
   #mapmusic = pygame.mixer.music.load('audio/sfx/menu_screen.mp3')
-  walk = [pygame.mixer.Sound('audio/sfx/footstep01.ogg'),pygame.mixer.Sound('audio/sfx/footstep01.ogg')]
+  #walk = [pygame.mixer.Sound('audio/sfx/footstep01.ogg'),pygame.mixer.Sound('audio/sfx/footstep01.ogg')]
   font = pygame.font.Font('fonts/Minecraft.ttf', 16)
   
   # Load all frames of animation for the player
@@ -65,8 +70,13 @@ def gameloop():
              pygame.image.load('images/obj/player/character_stand_r.png').convert(),
              pygame.image.load('images/obj/player/character_stand_r2.png').convert()]
 
-  tiles = [pygame.image.load('images/tiles/grass.png').convert(), pygame.image.load('images/tiles/wall.png').convert(),
-           pygame.image.load('images/tiles/water.png').convert(), pygame.image.load('images/tiles/wood.png').convert()]
+  tiles = [pygame.image.load('images/tiles/grass.png').convert(),
+           pygame.image.load('images/tiles/water.png').convert(),
+           pygame.image.load('images/tiles/stone.png').convert(),
+           pygame.image.load('images/tiles/grass.png').convert()]
+  
+  #, pygame.image.load('images/tiles/wall.png').convert(),
+           #pygame.image.load('images/tiles/water.png').convert(), pygame.image.load('images/tiles/wood.png').convert()]
   blocking_tiles = [1,2]
   bg = pygame.image.load('images/bgs/stardust.png').convert()
 
@@ -79,20 +89,20 @@ def gameloop():
   players = [ playerSprite(), ]
 
   # This should be moved to the map drawing to handle coordinates for x,y and offset.
-  coins = [  
-    itemSprite((500,300)),
-  ]
+  #coins = [  
+  #  itemSprite((500,300)),
+  #]
  
   # Render our groups to the display
   player_group = pygame.sprite.RenderPlain(*players)
-  coin_group = pygame.sprite.RenderPlain(*coins)
+  #coin_group = pygame.sprite.RenderPlain(*coins)
   
   if not save:
     # Setup Variables
     xoffset = 0
     yoffset = 0
-    xpos = 18
-    ypos = 6
+    xpos = 6
+    ypos = -57
     
     health=60
     stamina=40
@@ -104,10 +114,8 @@ def gameloop():
   
   # Event loop
   # pygame.mixer.music.play(0)
+
   while True:
-
-
-
     for event in pygame.event.get():
       # Mouse Bindings
       if event.type == MOUSEBUTTONDOWN:
@@ -124,45 +132,40 @@ def gameloop():
             pygame.quit()
             sys.exit(1)
 
-
-
-
-
     # Key Bindings
     keys = pygame.key.get_pressed()
 
-
-    if not ypos == len(map)-1 and keys[K_LEFT] or keys[K_a] and keys[K_LSHIFT]:
+    if not ypos == len(map)-1 and (keys[K_LEFT] or keys[K_a]):
       # BUGGY if you walk off of the map
       if map[ypos+1][xpos] not in blocking_tiles:
-        xoffset += 32
-        yoffset -= 16
+        xoffset += 64
+        #yoffset -= 16
         ypos += 1
-        walk[random.randrange(2)].play()
+        #walk[random.randrange(2)].play()
         player_group.update('l')
 
-    if ypos>0 and keys[K_RIGHT] or keys[K_d]:
+    if ypos>0 and (keys[K_RIGHT] or keys[K_d]):
       if map[ypos-1][xpos] not in blocking_tiles:
-        yoffset += 16
-        xoffset -= 32
+        #yoffset += 16
+        xoffset -= 64
         ypos -= 1
-        walk[random.randrange(2)].play()
+        #walk[random.randrange(2)].play()
         player_group.update('r')
 
-    if xpos>0 and keys[K_UP] or keys[K_w]and keys[K_LSHIFT]:
+    if xpos>0 and (keys[K_UP] or keys[K_w]):
       if map[ypos][xpos-1] not in blocking_tiles:
-        yoffset += 16
-        xoffset += 32
+        yoffset += 64
+        #xoffset += 32
         xpos -= 1
-        walk[random.randrange(2)].play()
+        #walk[random.randrange(2)].play()
         player_group.update('u')
 
-    if not xpos == len(map[0])-1 and keys[K_DOWN] or keys[K_s] and keys[K_LSHIFT]:
+    if not xpos == len(map[0])-1 and (keys[K_DOWN] or keys[K_s]):
       if map[ypos][xpos+1] not in blocking_tiles:
-        yoffset -= 16
-        xoffset -= 32
+        yoffset -= 64
+        #xoffset -= 32
         xpos += 1
-        walk[random.randrange(2)].play()
+        #walk[random.randrange(2)].play()
         player_group.update('d')
 
 
@@ -189,9 +192,9 @@ def gameloop():
     pygame.draw.rect(display, (200,200,200), pygame.Rect(25,38,stamina,8))
   
     # Draw sprites to screen
-    collisions = pygame.sprite.spritecollide(players[0], coin_group, True)
-    coin_group.update(collisions)
-    coin_group.draw(display)
+    #collisions = pygame.sprite.spritecollide(players[0], coin_group, True)
+    #coin_group.update(collisions)
+    #coin_group.draw(display)
 
     player_group.draw(display)
 
@@ -204,7 +207,7 @@ def gameloop():
       label_box = label_obj.center = (680,580)
       display.blit(label, label_box)
 
-      info = font.render("(%s,%s): Tile %s" % (xpos,ypos,map[ypos][xpos]), True, (250,250,250))
+      info = font.render("(%s,%s): Tile %s" % (ypos,xpos,map[ypos][xpos]), True, (250,250,250))
       info_obj = info.get_rect()
       info_box = label_obj.center = (25,580)
       display.blit(info,info_box)
@@ -218,6 +221,7 @@ def gameloop():
   
     clock.tick(fps_setting)
     pygame.display.update()
+    pygame.display.flip()
 
 
 if __name__ == "__main__":
