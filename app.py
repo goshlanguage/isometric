@@ -15,7 +15,7 @@ class playerSprite(pygame.sprite.Sprite):
   def __init__(self):
     pygame.sprite.Sprite.__init__(self)
     self.rect = pygame.Rect(self.frames[0].get_rect())
-    self.rect.center = (420,320) 
+    #self.rect.center = (420,320) 
     #372)
     self.anim = 0
     self.image = self.frames[0]
@@ -72,8 +72,8 @@ def gameloop():
 
   tiles = [pygame.image.load('images/tiles/grass.png').convert(),
            pygame.image.load('images/tiles/water.png').convert(),
-           pygame.image.load('images/tiles/stone.png').convert(),
-           pygame.image.load('images/tiles/grass.png').convert()]
+           pygame.image.load('images/tiles/brick.png').convert(),
+           pygame.image.load('images/tiles/water.jpg').convert()]
   
   #, pygame.image.load('images/tiles/wall.png').convert(),
            #pygame.image.load('images/tiles/water.png').convert(), pygame.image.load('images/tiles/wood.png').convert()]
@@ -101,8 +101,8 @@ def gameloop():
     # Setup Variables
     xoffset = 0
     yoffset = 0
-    xpos = 6
-    ypos = -57
+    xpos = 18
+    ypos = 10
     
     health=60
     stamina=40
@@ -137,34 +137,38 @@ def gameloop():
 
     if not ypos == len(map)-1 and (keys[K_LEFT] or keys[K_a]):
       # BUGGY if you walk off of the map
-      if map[ypos+1][xpos] not in blocking_tiles:
-        xoffset += 64
+      #if map[ypos+1][xpos] not in blocking_tiles:
+        xoffset += 32
         #yoffset -= 16
-        ypos += 1
+        #ypos += 1
+        xpos += 1
         #walk[random.randrange(2)].play()
         player_group.update('l')
 
     if ypos>0 and (keys[K_RIGHT] or keys[K_d]):
-      if map[ypos-1][xpos] not in blocking_tiles:
+      #if map[ypos-1][xpos] not in blocking_tiles:
         #yoffset += 16
-        xoffset -= 64
-        ypos -= 1
+        xoffset -= 32
+        #ypos -= 1
+        xpos -= 1
         #walk[random.randrange(2)].play()
         player_group.update('r')
 
     if xpos>0 and (keys[K_UP] or keys[K_w]):
-      if map[ypos][xpos-1] not in blocking_tiles:
-        yoffset += 64
+      #if map[ypos][xpos-1] not in blocking_tiles:
+        yoffset += 32
         #xoffset += 32
-        xpos -= 1
+        #xpos -= 1
+        ypos -= 1
         #walk[random.randrange(2)].play()
         player_group.update('u')
 
     if not xpos == len(map[0])-1 and (keys[K_DOWN] or keys[K_s]):
-      if map[ypos][xpos+1] not in blocking_tiles:
-        yoffset -= 64
+      #if map[ypos][xpos+1] not in blocking_tiles:
+        yoffset -= 32
         #xoffset -= 32
-        xpos += 1
+        #xpos += 1
+        ypos += 1
         #walk[random.randrange(2)].play()
         player_group.update('d')
 
@@ -206,8 +210,12 @@ def gameloop():
       label_obj = label.get_rect()
       label_box = label_obj.center = (680,580)
       display.blit(label, label_box)
-
-      info = font.render("(%s,%s): Tile %s" % (ypos,xpos,map[ypos][xpos]), True, (250,250,250))
+       
+      try:
+        info = font.render("(%s,%s): Tile %s" % (ypos,xpos,map[ypos][xpos]), True, (250,250,250))
+      except:
+        info = font.render("(%s,%s): Tile %s" % (ypos,xpos,"error"), True, (250,250,250))
+      
       info_obj = info.get_rect()
       info_box = label_obj.center = (25,580)
       display.blit(info,info_box)

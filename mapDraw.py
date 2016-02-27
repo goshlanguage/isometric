@@ -2,7 +2,7 @@
 #
 import random
 
-size = 64
+size = 32
 
 def randomMap(probability, list_obj):
   # random map
@@ -39,8 +39,8 @@ def drawMap(xoffset,yoffset,tiles,display,map):
       tileImage = tiles[map[currentRow][currentTile]]
       tileImage.set_colorkey((0,0,0))
   
-      cartx = currentTile*64
-      carty = currentRow*64
+      cartx = currentTile*32
+      carty = currentRow*32
 
       x = xoffset + cartx 
       y = yoffset + carty
