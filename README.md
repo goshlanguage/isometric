@@ -106,24 +106,24 @@ RoadMap
 
 ~~Health Bar~~
 
-Load/Save Game
+- [ ] Load/Save Game
 
-Inventory Menu
+- [ ] Inventory Menu
 
-Inventory
+- [ ] Inventory
 
-Animated Character Sprite (~~walking~~, standing, attack)
+- [ ] Animated Character Sprite (~~walking~~, standing, attack)
 
-Animated Enemy Sprite
+- [ ] Animated Enemy Sprite
 
-Inventory Hot Bar
+- [ ] Inventory Hot Bar
 
-Tile placement function
+- [ ] Tile placement function
 
-Light Shadows
+- [ ] Light Shadows
 
-Decent BG Music
+- [ ] Decent BG Music
 
-SFX Package
+- [ ] SFX Package
 
-Draw Distance Detection and Rendering
+- [ ] Draw Distance Detection and Rendering
